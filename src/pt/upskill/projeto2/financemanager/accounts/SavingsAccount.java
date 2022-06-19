@@ -8,4 +8,8 @@ public class SavingsAccount extends Account{
     public SavingsAccount(int id, String name) {
         super(id, name);
     }
+
+    public SavingsAccount() {
+        //super();
+    }
 }

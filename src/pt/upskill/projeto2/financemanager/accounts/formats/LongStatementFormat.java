@@ -5,4 +5,8 @@ public class LongStatementFormat implements Format {
     public String format(Object objectToFormat) {
         return null;
     }
+
+    public String fields() {
+        return "Date \tValue Date \tDescription \tDraft \tCredit \tAccounting balance \tAvailable balance "; //to do??
+    }
 }

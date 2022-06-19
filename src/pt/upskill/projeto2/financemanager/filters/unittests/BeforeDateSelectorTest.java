@@ -5,7 +5,8 @@ import org.junit.Test;
 import pt.upskill.projeto2.financemanager.accounts.StatementLine;
 import pt.upskill.projeto2.financemanager.categories.Category;
 import pt.upskill.projeto2.financemanager.date.Date;
-//import pt.upskill.projeto2.financemanager.filters.BeforeDateSelector;
+import pt.upskill.projeto2.financemanager.filters.BeforeDateSelector;
+import pt.upskill.projeto2.financemanager.filters.BeforeDateSelector;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

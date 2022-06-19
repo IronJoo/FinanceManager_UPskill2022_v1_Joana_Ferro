@@ -21,7 +21,7 @@ public class SimpleStatementFormatTest {
     public void setUp() throws Exception {
         s1 = new StatementLine(new Date(1, 1, 2014), new Date(1, 1, 2014), "description", 0.0, 22, 1520, 1542, null);
         s2 = new StatementLine(new Date(2, 1, 2014), new Date(3, 1, 2014), "description ...", -10.0, 220, 1500, 1730, new Category("CATEGORY"));
-        f = new SimpleStatementFormat();
+        //f = new SimpleStatementFormat(); //TO DO: wrong constructor???
     }
 
 
