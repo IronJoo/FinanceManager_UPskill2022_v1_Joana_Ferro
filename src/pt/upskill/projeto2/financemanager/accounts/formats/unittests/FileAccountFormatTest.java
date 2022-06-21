@@ -11,7 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import pt.upskill.projeto2.financemanager.accounts.Account;
-//import pt.upskill.projeto2.financemanager.accounts.formats.FileAccountFormat;
 import pt.upskill.projeto2.financemanager.accounts.formats.FileAccountFormat;
 import pt.upskill.projeto2.financemanager.date.Date;
 

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Account {
-    private int id;
+    private long id;
     private String name;
     private Date startDate;
     private Date endDate;
@@ -23,7 +23,7 @@ public class Account {
     public Account() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -46,28 +46,51 @@ public class Account {
         this.interestRate = interestRate;
     }
 
-    public void setName(String other) {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public static Account newAccount(File file) {
         try {
             Scanner fileScanner = new Scanner(file);
             Account newAccount = new Account();
-            String line = fileScanner.nextLine();
-            //String[] tokens = line.split(" - "); //save date of last update
+            int count = 0;
             //String dateLastUpdate = tokens[1];
             while (fileScanner.hasNextLine()){
-                if (line.contains("SavingsAccount")){
-                    newAccount = new SavingsAccount();
+                String line = fileScanner.nextLine();
+                String[] tokens = line.replaceAll(" ", "").split(";");
+                if (count == 1){ //if reading second line
+                    if (line.contains("SavingsAccount")){
+                        newAccount = new SavingsAccount();
+                    }
+                    if (line.contains("DraftAccount")){
+                        newAccount = new DraftAccount();
+                    }
+                    newAccount.setId(Long.parseLong(tokens[1]));
+                    newAccount.setName(tokens[3]);
                 }
-                if (line.contains("DraftAccount")){
-                    newAccount = new DraftAccount();
-                }
+//                if (count == 2){
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+//                    newAccount.setStartDate();
+//                }
+                count++;
             }
             return newAccount;
         }
         catch (FileNotFoundException e){
-            e.printStackTrace();
+            System.out.println("Ficheiro n");;
         }
         return null;
     }
@@ -98,5 +121,16 @@ public class Account {
     }
 
     public void autoCategorizeStatements(List<Category> categories) {
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", interestRate=" + interestRate +
+                '}';
     }
 }

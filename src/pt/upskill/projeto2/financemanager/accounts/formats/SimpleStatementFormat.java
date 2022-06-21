@@ -1,8 +1,16 @@
 package pt.upskill.projeto2.financemanager.accounts.formats;
 
-public class SimpleStatementFormat implements Format {
+import pt.upskill.projeto2.financemanager.accounts.StatementLine;
+
+public class SimpleStatementFormat implements StatementLineFormat {
+
     @Override
-    public String format(Object objectToFormat) {
+    public String format(StatementLine objectToFormat) {
+        return null;
+    }
+
+    @Override
+    public String fields() {
         return null;
     }
 }
