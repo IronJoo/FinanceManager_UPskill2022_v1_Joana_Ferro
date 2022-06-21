@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Account {
+public abstract class Account {
     private long id;
     private String currency;
     private String name;
@@ -41,9 +41,7 @@ public class Account {
     public Date getEndDate() {
         return endDate;
     }
-    public double getInterestRate() {
-        return interestRate;
-    }
+    public abstract double getInterestRate(); //fix to be abstract
 
     public String getCurrency() {
         return currency;
@@ -80,7 +78,7 @@ public class Account {
     public static Account newAccount(File file) {
         try {
             Scanner fileScanner = new Scanner(file);
-            Account newAccount = new Account();
+            Account newAccount = null;
             int count = 0;
             //String dateLastUpdate = tokens[1];
             while (fileScanner.hasNextLine()) {
@@ -103,20 +101,20 @@ public class Account {
                         newAccount.setName(tokens[3]);
                         break;
                 case 2:
-                    newAccount.setStartDate(convertToDate(tokens[1]));
+                    newAccount.setStartDate(convertToDate(tokens[1])); //convert date in String to Date
                     break;
                 case 3:
                     newAccount.setEndDate(convertToDate(tokens[1]));
                     break;
-                default:
+                default: //default == transaction lines in .csv file
                     if (!line.equals("")) {
                         Date date = convertToDate(tokens[0]);
                         Date valueDate = convertToDate(tokens[1]);
                         String description = tokens[2];
                         double draft = Double.parseDouble(tokens[3]);
                         double credit = Double.parseDouble(tokens[4]);
-                        double accountingBalance = Double.parseDouble(tokens[4]);
-                        double availableBalance = Double.parseDouble(tokens[5]);
+                        double accountingBalance = Double.parseDouble(tokens[5]);
+                        double availableBalance = Double.parseDouble(tokens[6]);
                         StatementLine statementLine = new StatementLine(date, valueDate, description, draft, credit, accountingBalance, availableBalance, null);
                         newAccount.addStatementLine(statementLine);
                     }
@@ -142,11 +140,23 @@ public class Account {
     }
 
     public double currentBalance() {
-        return 0;
+        int lastIndex = statementLinesList.size() - 1;
+        double balance = 0.0;
+        if (lastIndex >= 0) {
+            balance = balance + statementLinesList.get(lastIndex).getAccountingBalance();
+            return balance;
+        }
+        return 0.0;
     }
 
     public double estimatedAverageBalance() {
-        return 0;
+        int lastIndex = statementLinesList.size() - 1;
+        double balance = 0.0;
+        if (lastIndex >= 0) {
+            balance = balance + statementLinesList.get(lastIndex).getAccountingBalance(); //TO DO: possibly using wrong getter
+            return balance;
+        }
+        return 0.0;
     }
 
     public void addStatementLine(StatementLine statement) {
