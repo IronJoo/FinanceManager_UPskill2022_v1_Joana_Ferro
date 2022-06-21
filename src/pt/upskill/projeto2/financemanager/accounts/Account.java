@@ -5,15 +5,18 @@ import pt.upskill.projeto2.financemanager.date.Date;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Account {
     private long id;
+    private String currency;
     private String name;
     private Date startDate;
     private Date endDate;
     private double interestRate;
+    private ArrayList<StatementLine> statementLinesList = new ArrayList<>();
 
     public Account(int id, String name){
         this.id = id;
@@ -42,6 +45,18 @@ public class Account {
         return interestRate;
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public ArrayList<StatementLine> getStatementLinesList() {
+        return statementLinesList;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public void setInterestRate(double interestRate) {
         this.interestRate = interestRate;
     }
@@ -68,31 +83,59 @@ public class Account {
             Account newAccount = new Account();
             int count = 0;
             //String dateLastUpdate = tokens[1];
-            while (fileScanner.hasNextLine()){
+            while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String[] tokens = line.replaceAll(" ", "").split(";");
-                if (count == 1){ //if reading second line
-                    if (line.contains("SavingsAccount")){
-                        newAccount = new SavingsAccount();
+                switch (count) {
+                    case 0:
+                    case 4:
+                        count++;
+                        continue;
+                    case 1: //if reading second line
+                        if (line.contains("SavingsAccount")) {
+                            newAccount = new SavingsAccount();
+                        }
+                        if (line.contains("DraftAccount")) {
+                            newAccount = new DraftAccount();
+                        }
+                        newAccount.setId(Long.parseLong(tokens[1]));
+                        newAccount.setCurrency(tokens[2]);
+                        newAccount.setName(tokens[3]);
+                        break;
+                case 2:
+                    newAccount.setStartDate(convertToDate(tokens[1]));
+                    break;
+                case 3:
+                    newAccount.setEndDate(convertToDate(tokens[1]));
+                    break;
+                default:
+                    if (!line.equals("")) {
+                        Date date = convertToDate(tokens[0]);
+                        Date valueDate = convertToDate(tokens[1]);
+                        String description = tokens[2];
+                        double draft = Double.parseDouble(tokens[3]);
+                        double credit = Double.parseDouble(tokens[4]);
+                        double accountingBalance = Double.parseDouble(tokens[4]);
+                        double availableBalance = Double.parseDouble(tokens[5]);
+                        StatementLine statementLine = new StatementLine(date, valueDate, description, draft, credit, accountingBalance, availableBalance, null);
+                        newAccount.addStatementLine(statementLine);
                     }
-                    if (line.contains("DraftAccount")){
-                        newAccount = new DraftAccount();
-                    }
-                    newAccount.setId(Long.parseLong(tokens[1]));
-                    newAccount.setName(tokens[3]);
                 }
-//                if (count == 2){
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//                    newAccount.setStartDate();
-//                }
                 count++;
             }
             return newAccount;
         }
         catch (FileNotFoundException e){
-            System.out.println("Ficheiro n");;
+            System.out.println("Ficheiro nao encontrado");;
         }
         return null;
+    }
+    private static Date convertToDate(String dateString){
+        String[] tokens = dateString.split("-");
+        int day = Integer.parseInt(tokens[0]);
+        int month = Integer.parseInt(tokens[1]);
+        int year = Integer.parseInt(tokens[2]);
+        return new Date(day, month, year);
     }
     public String additionalInfo() {
         return "";
@@ -106,7 +149,8 @@ public class Account {
         return 0;
     }
 
-    public void addStatementLine(StatementLine description) {
+    public void addStatementLine(StatementLine statement) {
+        statementLinesList.add(statement);
     }
 
     public void removeStatementLinesBefore(Date date) {

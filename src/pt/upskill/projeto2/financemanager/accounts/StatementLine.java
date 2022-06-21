@@ -24,6 +24,7 @@ public class StatementLine {
 		this.availableBalance = availableBalance;
 		this.category = category;
 	}
+	public StatementLine(){}
 
 	public Date getDate() {
 		return date;
@@ -59,5 +60,19 @@ public class StatementLine {
 
 	public void setCategory(Category cat) {
 		category = cat;
+	}
+
+	@Override
+	public String toString() {
+		return "StatementLine{" +
+				"date=" + date +
+				", valueDate=" + valueDate +
+				", description='" + description + '\'' +
+				", draft=" + draft +
+				", credit=" + credit +
+				", accountingBalance=" + accountingBalance +
+				", availableBalance=" + availableBalance +
+				", category=" + category +
+				'}';
 	}
 }
