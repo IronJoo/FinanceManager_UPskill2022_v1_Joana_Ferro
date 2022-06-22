@@ -105,7 +105,7 @@ public class AccountTest {
         a1.addStatementLine(new StatementLine(new Date(2, 1, 2014), new Date(2, 1, 2014), "description", 0.0, 0.0, 1542, 1542, null));
         assertEquals(1542.0, a1.currentBalance(), 0.001);
         assertEquals(1542.0, a1.estimatedAverageBalance(), 0.001);
-        assertEquals(new Date(1, 1, 2014), a1.getStartDate()); //TO DO: get startDate from beginning of transaction list
+        assertEquals(new Date(1, 1, 2014), a1.getStartDate());
         assertEquals(new Date(2, 1, 2014), a1.getEndDate());
     }
 

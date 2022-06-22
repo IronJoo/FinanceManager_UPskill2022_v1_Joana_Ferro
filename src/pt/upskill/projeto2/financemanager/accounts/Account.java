@@ -35,10 +35,12 @@ public abstract class Account {
     }
 
     public Date getStartDate() {
+        setDatesFromStatements(this);
         return startDate;
     }
 
     public Date getEndDate() {
+        setDatesFromStatements(this);
         return endDate;
     }
     public abstract double getInterestRate(); //fix to be abstract
@@ -79,6 +81,7 @@ public abstract class Account {
         try {
             Scanner fileScanner = new Scanner(file);
             Account newAccount = null;
+            boolean hasStatementLines = false;
             int count = 0;
             //String dateLastUpdate = tokens[1];
             while (fileScanner.hasNextLine()) {
@@ -86,6 +89,8 @@ public abstract class Account {
                 String[] tokens = line.replaceAll(" ", "").split(";");
                 switch (count) {
                     case 0:
+                    case 2:
+                    case 3:
                     case 4:
                         count++;
                         continue;
@@ -100,27 +105,30 @@ public abstract class Account {
                         newAccount.setCurrency(tokens[2]);
                         newAccount.setName(tokens[3]);
                         break;
-                case 2:
-                    newAccount.setStartDate(convertToDate(tokens[1])); //convert date in String to Date
-                    break;
-                case 3:
-                    newAccount.setEndDate(convertToDate(tokens[1]));
-                    break;
-                default: //default == transaction lines in .csv file
-                    if (!line.equals("")) {
-                        Date date = convertToDate(tokens[0]);
-                        Date valueDate = convertToDate(tokens[1]);
-                        String description = tokens[2];
-                        double draft = Double.parseDouble(tokens[3]);
-                        double credit = Double.parseDouble(tokens[4]);
-                        double accountingBalance = Double.parseDouble(tokens[5]);
-                        double availableBalance = Double.parseDouble(tokens[6]);
-                        StatementLine statementLine = new StatementLine(date, valueDate, description, draft, credit, accountingBalance, availableBalance, null);
-                        newAccount.addStatementLine(statementLine);
-                    }
+//                    case 2:
+//                        newAccount.setStartDate(convertToDate(tokens[1]));
+//                        break;
+//                    case 3:
+//                        newAccount.setEndDate(convertToDate(tokens[1]));
+//                        break;
+                    default: //default == transaction lines in .csv file
+                        if (!line.equals("")) {
+                            hasStatementLines = true;
+                            Date date = convertToDate(tokens[0]);
+                            Date valueDate = convertToDate(tokens[1]);
+                            String description = tokens[2];
+                            double draft = Double.parseDouble(tokens[3]);
+                            double credit = Double.parseDouble(tokens[4]);
+                            double accountingBalance = Double.parseDouble(tokens[5]);
+                            double availableBalance = Double.parseDouble(tokens[6]);
+                            StatementLine statementLine = new StatementLine(date, valueDate, description, draft, credit, accountingBalance, availableBalance, null);
+                            newAccount.addStatementLine(statementLine);
+                        }
                 }
                 count++;
             }
+            if (hasStatementLines)
+                setDatesFromStatements(newAccount);
             return newAccount;
         }
         catch (FileNotFoundException e){
@@ -128,13 +136,21 @@ public abstract class Account {
         }
         return null;
     }
-    private static Date convertToDate(String dateString){
+    private static Date convertToDate(String dateString){ //converts date in String to Date
         String[] tokens = dateString.split("-");
         int day = Integer.parseInt(tokens[0]);
         int month = Integer.parseInt(tokens[1]);
         int year = Integer.parseInt(tokens[2]);
         return new Date(day, month, year);
     }
+    private static void setDatesFromStatements(Account account){
+        if (account.getStatementLinesList().size() > 0){ //if account has statements
+            account.setStartDate(account.getStatementLinesList().get(0).getDate()); //sets Account startDate to date in first statement
+            int lastIndex = account.getStatementLinesList().size() - 1;
+            account.setEndDate(account.getStatementLinesList().get(lastIndex).getDate()); //sets Account endDate to date in last statement
+        }
+    }
+
     public String additionalInfo() {
         return "";
     }
@@ -171,6 +187,13 @@ public abstract class Account {
     }
 
     public double totalForMonth(int month, int year) {
+        if (statementLinesList.size() > 0){
+            for (StatementLine statement : statementLinesList){
+
+            }
+        }else{
+            return 0;
+        }
         return 0;
     }
 
