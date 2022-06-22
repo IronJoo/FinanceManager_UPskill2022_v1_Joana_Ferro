@@ -143,7 +143,7 @@ public abstract class Account {
         int year = Integer.parseInt(tokens[2]);
         return new Date(day, month, year);
     }
-    private static void setDatesFromStatements(Account account){
+    private static void setDatesFromStatements(Account account){ //reads first and last Date in Account StatementLines and sets start and end Dates accordingly
         if (account.getStatementLinesList().size() > 0){ //if account has statements
             account.setStartDate(account.getStatementLinesList().get(0).getDate()); //sets Account startDate to date in first statement
             int lastIndex = account.getStatementLinesList().size() - 1;
@@ -187,14 +187,14 @@ public abstract class Account {
     }
 
     public double totalForMonth(int month, int year) {
-        if (statementLinesList.size() > 0){
+        double total = 0;
+        if (statementLinesList.size() > 0){ //if statementLinesList has statements
             for (StatementLine statement : statementLinesList){
-
+                total = total + statement.getDraft();
             }
-        }else{
-            return 0;
+            return total;
         }
-        return 0;
+        return 0.0;
     }
 
     public void autoCategorizeStatements(List<Category> categories) {

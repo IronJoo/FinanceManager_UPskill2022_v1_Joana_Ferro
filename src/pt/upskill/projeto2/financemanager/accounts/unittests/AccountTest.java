@@ -110,7 +110,7 @@ public class AccountTest {
     }
 
     @Test
-    public void testRemoveStatementLinesBefore() {
+    public void testRemoveStatementLinesBefore() { //TO DO: removeStatementLinesBefore()
         a5.removeStatementLinesBefore(new Date(1, 12, 2013));
         assertEquals(0.0, a5.totalDraftsForCategorySince(categories.get(0), new Date(1, 11, 2013)), 0.001);
     }
