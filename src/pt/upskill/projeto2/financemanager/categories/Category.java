@@ -1,6 +1,6 @@
 package pt.upskill.projeto2.financemanager.categories;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * ...
  */
 
-public class Category {
+public class Category implements Serializable {
 
     private String name;
     private List<String> tags = new ArrayList<String>();
@@ -28,8 +28,19 @@ public class Category {
      * @return uma lista de categorias, geradas ao ler o ficheiro
      */
     public static List<Category> readCategories(File file) {
-        // TODO Auto-generated method stub
-        return null;
+        List<Category> categoryList = null;
+        try{
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            categoryList = (List<Category>) objectInputStream.readObject();
+            objectInputStream.close();
+            fileInputStream.close();
+        }catch (IOException ioe){
+            System.out.println("Erro a ler o ficheiro com lista de categorias!");
+        }catch (ClassNotFoundException cnfe){
+            System.out.println("Nao foi possivel converter para lista de categorias!");
+        }
+        return categoryList;
     }
 
     /**
@@ -39,11 +50,20 @@ public class Category {
      * @param categories
      */
     public static void writeCategories(File file, List<Category> categories) {
-        // TODO completar o código da função
+        try{
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(categories);
+            objectOutputStream.close();
+            fileOutputStream.close();
+        }catch (IOException ioe){
+            System.out.println("Erro a salvar lista de categorias no ficheiro!");
+        }
     }
 
     public boolean hasTag(String tag) {
-        // TODO Auto-generated method stub
+        if (tags.contains(tag))
+            return true;
         return false;
     }
 
@@ -53,8 +73,7 @@ public class Category {
     }
 
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return name;
     }
 
 }

@@ -105,12 +105,6 @@ public abstract class Account {
                         newAccount.setCurrency(tokens[2]);
                         newAccount.setName(tokens[3]);
                         break;
-//                    case 2:
-//                        newAccount.setStartDate(convertToDate(tokens[1]));
-//                        break;
-//                    case 3:
-//                        newAccount.setEndDate(convertToDate(tokens[1]));
-//                        break;
                     default: //default == transaction lines in .csv file
                         if (!line.equals("")) {
                             hasStatementLines = true;
@@ -180,6 +174,7 @@ public abstract class Account {
     }
 
     public void removeStatementLinesBefore(Date date) {
+        //TO DO
     }
 
     public double totalDraftsForCategorySince(Category category, Date date) {
@@ -198,6 +193,7 @@ public abstract class Account {
     }
 
     public void autoCategorizeStatements(List<Category> categories) {
+
     }
 
     @Override
