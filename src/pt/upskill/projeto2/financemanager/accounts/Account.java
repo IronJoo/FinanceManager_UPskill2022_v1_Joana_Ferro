@@ -16,8 +16,9 @@ public abstract class Account {
     private Date startDate;
     private Date endDate;
     private double interestRate;
+    private String type;
+    private Date weirdDate;
     private ArrayList<StatementLine> statementLinesList = new ArrayList<>();
-    private boolean isAutoCategorized = false;
 
     public Account(int id, String name){
         this.id = id;
@@ -54,6 +55,22 @@ public abstract class Account {
         return statementLinesList;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public Date getWeirdDate() {
+        return weirdDate;
+    }
+
+    public void setWeirdDate(Date weirdDate) {
+        this.weirdDate = weirdDate;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public void setCurrency(String currency) {
         this.currency = currency;
     }
@@ -84,11 +101,14 @@ public abstract class Account {
             Account newAccount = null;
             boolean hasStatementLines = false;
             int count = 0;
+            Date weirdDate = new Date();
             //String dateLastUpdate = tokens[1];
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 switch (count) {
                     case 0:
+                        String[] tokens0 = line.split(" ");
+                        weirdDate = convertToDate(tokens0[3]);
                     case 2:
                     case 3:
                     case 4:
@@ -102,9 +122,11 @@ public abstract class Account {
                         if (line.contains("DraftAccount")) {
                             newAccount = new DraftAccount();
                         }
+                        newAccount.setWeirdDate(weirdDate);
                         newAccount.setId(Long.parseLong(tokens[1]));
                         newAccount.setCurrency(tokens[2]);
                         newAccount.setName(tokens[3]);
+                        newAccount.setType(tokens[4]);
                         break;
                     default: //default == transaction lines in .csv file
                         String[] statementTokens = line.split(" ;");
