@@ -15,7 +15,7 @@ public class StatementLine {
 	private Category category;
 
 	public StatementLine(Date date, Date valueDate, String description, double draft, double credit, double accountingBalance, double availableBalance, Category category) {
-		if (date == null || description.equals("") || description == null || draft > 0 || credit < 0)
+		if (date == null || description == null || description.equals("") || draft > 0 || credit < 0)
 			throw new IllegalArgumentException();
 		this.date = date;
 		this.valueDate = valueDate;
