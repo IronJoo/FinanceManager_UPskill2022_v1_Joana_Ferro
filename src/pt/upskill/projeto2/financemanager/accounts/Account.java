@@ -17,6 +17,7 @@ public abstract class Account {
     private Date endDate;
     private double interestRate;
     private ArrayList<StatementLine> statementLinesList = new ArrayList<>();
+    private boolean isAutoCategorized = false;
 
     public Account(int id, String name){
         this.id = id;
@@ -35,12 +36,12 @@ public abstract class Account {
     }
 
     public Date getStartDate() {
-        setDatesFromStatements(this);
+        setStartDateFromStatements(this);
         return startDate;
     }
 
     public Date getEndDate() {
-        setDatesFromStatements(this);
+        setEndDateFromStatements(this);
         return endDate;
     }
     public abstract double getInterestRate(); //fix to be abstract
@@ -86,7 +87,6 @@ public abstract class Account {
             //String dateLastUpdate = tokens[1];
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
-                String[] tokens = line.replaceAll(" ", "").split(";");
                 switch (count) {
                     case 0:
                     case 2:
@@ -95,6 +95,7 @@ public abstract class Account {
                         count++;
                         continue;
                     case 1: //if reading second line
+                        String[] tokens = line.replaceAll(" ", "").split(";");
                         if (line.contains("SavingsAccount")) {
                             newAccount = new SavingsAccount();
                         }
@@ -106,23 +107,26 @@ public abstract class Account {
                         newAccount.setName(tokens[3]);
                         break;
                     default: //default == transaction lines in .csv file
+                        String[] statementTokens = line.split(" ;");
                         if (!line.equals("")) {
                             hasStatementLines = true;
-                            Date date = convertToDate(tokens[0]);
-                            Date valueDate = convertToDate(tokens[1]);
-                            String description = tokens[2];
-                            double draft = Double.parseDouble(tokens[3]);
-                            double credit = Double.parseDouble(tokens[4]);
-                            double accountingBalance = Double.parseDouble(tokens[5]);
-                            double availableBalance = Double.parseDouble(tokens[6]);
+                            Date date = convertToDate(statementTokens[0]);
+                            Date valueDate = convertToDate(statementTokens[1]);
+                            String description = statementTokens[2];
+                            double draft = Double.parseDouble(statementTokens[3]);
+                            double credit = Double.parseDouble(statementTokens[4]);
+                            double accountingBalance = Double.parseDouble(statementTokens[5]);
+                            double availableBalance = Double.parseDouble(statementTokens[6]);
                             StatementLine statementLine = new StatementLine(date, valueDate, description, draft, credit, accountingBalance, availableBalance, null);
                             newAccount.addStatementLine(statementLine);
                         }
                 }
                 count++;
             }
-            if (hasStatementLines)
-                setDatesFromStatements(newAccount);
+            if (hasStatementLines) {
+                setStartDateFromStatements(newAccount);
+                setEndDateFromStatements(newAccount);
+            }
             return newAccount;
         }
         catch (FileNotFoundException e){
@@ -137,9 +141,13 @@ public abstract class Account {
         int year = Integer.parseInt(tokens[2]);
         return new Date(day, month, year);
     }
-    private static void setDatesFromStatements(Account account){ //reads first and last Date in Account StatementLines and sets start and end Dates accordingly
+    private static void setStartDateFromStatements(Account account){ //reads first Date in Account StatementLines and sets startDate
         if (account.getStatementLinesList().size() > 0){ //if account has statements
             account.setStartDate(account.getStatementLinesList().get(0).getDate()); //sets Account startDate to date in first statement
+        }
+    }
+    private static void setEndDateFromStatements(Account account){ //reads last Date in Account StatementLines and sets endDate
+        if (account.getStatementLinesList().size() > 0){ //if account has statements
             int lastIndex = account.getStatementLinesList().size() - 1;
             account.setEndDate(account.getStatementLinesList().get(lastIndex).getDate()); //sets Account endDate to date in last statement
         }
@@ -176,11 +184,6 @@ public abstract class Account {
     public void removeStatementLinesBefore(Date date) {
         //TO DO
     }
-
-    public double totalDraftsForCategorySince(Category category, Date date) {
-        return 0;
-    }
-
     public double totalForMonth(int month, int year) {
         double total = 0;
         if (statementLinesList.size() > 0){ //if statementLinesList has statements
@@ -192,8 +195,25 @@ public abstract class Account {
         return 0.0;
     }
 
-    public void autoCategorizeStatements(List<Category> categories) {
+    public double totalDraftsForCategorySince(Category category, Date date) {
+        double total = 0.0;
+            for (StatementLine statement : statementLinesList) {
+                Category statementCategory = statement.getCategory();
+                if (statementCategory != null && statementCategory.equals(category) && statement.getDate().after(date))
+                    total = total + statement.getDraft();
+                }
+        return total;
+    }
 
+    public void autoCategorizeStatements(List<Category> categories) {
+        for (StatementLine statement : statementLinesList) {
+            String statementDescription = statement.getDescription();
+            for (Category category : categories) {
+                if (category.hasTag(statementDescription)) {
+                    statement.setCategory(category);
+                }
+            }
+        }
     }
 
     @Override

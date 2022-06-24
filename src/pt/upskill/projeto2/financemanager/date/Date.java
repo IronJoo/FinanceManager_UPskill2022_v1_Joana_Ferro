@@ -90,13 +90,13 @@ public class Date {
         return c.get(Calendar.DAY_OF_MONTH);
     }
 
-//	private void setDay(int d) {
-//		Calendar c = Calendar.getInstance();
-//		c.setTime(date);
-//		c.set(Calendar.DAY_OF_MONTH, d);
-//		checkInvariant();
-//		date = c.getTime();
-//	}
+	private void setDay(int d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.set(Calendar.DAY_OF_MONTH, d);
+		checkInvariant();
+		date = c.getTime();
+	}
 
     public int compareTo(Date d) {
         if (getYear() != d.getYear())
