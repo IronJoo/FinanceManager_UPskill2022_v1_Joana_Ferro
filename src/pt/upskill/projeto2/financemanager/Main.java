@@ -17,22 +17,8 @@ public class Main {
     public static void main(String[] args) {
 
         PersonalFinanceManager personalFinanceManager = new PersonalFinanceManager();
-        PersonalFinanceManagerUserInterface gui = new PersonalFinanceManagerUserInterface(
-                personalFinanceManager);
+        PersonalFinanceManagerUserInterface gui = new PersonalFinanceManagerUserInterface(personalFinanceManager);
         gui.execute();
-
-//        Account testAccount = new Account(12345,"Teste");
-//        Account testAccount2 = Account.newAccount(new File("account_info_test/1234567890989.csv"));
-//        System.out.println(testAccount2.getClass());
-//        System.out.println(testAccount2);
-//        Account testAccount3 = Account.newAccount(new File("account_info_test/1234567890989.csv"));
-////        System.out.println(testAccount3.getClass());
-////        System.out.println(testAccount3);
-//        for (StatementLine statement : testAccount3.getStatementLinesList())
-//            if (statement.getCategory() == null)
-//                System.out.println("Valor nulo");
-            //System.out.println(statement.getCategory());
-
 
     }
 

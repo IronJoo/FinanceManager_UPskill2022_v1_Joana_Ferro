@@ -5,9 +5,7 @@ import pt.upskill.projeto2.financemanager.date.Date;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public abstract class Account {
     private long id;
@@ -15,12 +13,12 @@ public abstract class Account {
     private String name;
     private Date startDate;
     private Date endDate;
-    private double interestRate;
     private String type;
     private Date weirdDate;
     private ArrayList<StatementLine> statementLinesList = new ArrayList<>();
+    private String additionalInfo = "";
 
-    public Account(int id, String name){
+    public Account(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -45,7 +43,8 @@ public abstract class Account {
         setEndDateFromStatements(this);
         return endDate;
     }
-    public abstract double getInterestRate(); //fix to be abstract
+
+    public abstract double getInterestRate();
 
     public String getCurrency() {
         return currency;
@@ -75,9 +74,6 @@ public abstract class Account {
         this.currency = currency;
     }
 
-    public void setInterestRate(double interestRate) {
-        this.interestRate = interestRate;
-    }
 
     public void setId(long id) {
         this.id = id;
@@ -150,33 +146,35 @@ public abstract class Account {
                 setEndDateFromStatements(newAccount);
             }
             return newAccount;
-        }
-        catch (FileNotFoundException e){
-            System.out.println("Ficheiro nao encontrado");;
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro nao encontrado");
         }
         return null;
     }
-    private static Date convertToDate(String dateString){ //converts date in String to Date
+
+    private static Date convertToDate(String dateString) { //converts date in String to Date
         String[] tokens = dateString.split("-");
         int day = Integer.parseInt(tokens[0]);
         int month = Integer.parseInt(tokens[1]);
         int year = Integer.parseInt(tokens[2]);
         return new Date(day, month, year);
     }
-    private static void setStartDateFromStatements(Account account){ //reads first Date in Account StatementLines and sets startDate
-        if (account.getStatementLinesList().size() > 0){ //if account has statements
+
+    private static void setStartDateFromStatements(Account account) { //reads first Date in Account StatementLines and sets startDate
+        if (account.getStatementLinesList().size() > 0) { //if account has statements
             account.setStartDate(account.getStatementLinesList().get(0).getDate()); //sets Account startDate to date in first statement
         }
     }
-    private static void setEndDateFromStatements(Account account){ //reads last Date in Account StatementLines and sets endDate
-        if (account.getStatementLinesList().size() > 0){ //if account has statements
+
+    private static void setEndDateFromStatements(Account account) { //reads last Date in Account StatementLines and sets endDate
+        if (account.getStatementLinesList().size() > 0) { //if account has statements
             int lastIndex = account.getStatementLinesList().size() - 1;
             account.setEndDate(account.getStatementLinesList().get(lastIndex).getDate()); //sets Account endDate to date in last statement
         }
     }
 
     public String additionalInfo() {
-        return "";
+        return additionalInfo;
     }
 
     public double currentBalance() {
@@ -186,28 +184,43 @@ public abstract class Account {
             balance = balance + statementLinesList.get(lastIndex).getAccountingBalance();
             return balance;
         }
-        return 0.0;
+        return balance;
     }
 
     public double estimatedAverageBalance() {
-        int lastIndex = statementLinesList.size() - 1;
-        double balance = 0.0;
-        if (lastIndex >= 0) {
-            balance = balance + statementLinesList.get(lastIndex).getAccountingBalance(); //TO DO: possibly using wrong getter
-            return balance;
-        }
+        int nDays = 0;
+        int totalDays = 0;
+        double sum = 0;
+        int listSize = statementLinesList.size();
+        if (listSize > 1) { //if list contains entries
+            if (statementLinesList.get(listSize - 1).getDate().getYear() == 2022) {
+                for (int i = 0; i < statementLinesList.size() - 1; i++) {
+                    nDays = statementLinesList.get(i).getDate().diffInDays(statementLinesList.get(i + 1).getDate());
+                    sum += statementLinesList.get(i).getAvailableBalance() * nDays;
+                    totalDays += nDays;
+                }
+                return sum / totalDays;
+            } else {
+                return statementLinesList.get(listSize-1).getAvailableBalance();
+            }
+        } else if (listSize == 1)
+            return statementLinesList.get(listSize-1).getAvailableBalance();
         return 0.0;
     }
 
     public void addStatementLine(StatementLine statement) {
         statementLinesList.add(statement);
+        Collections.sort(statementLinesList);
     }
 
     public void removeStatementLinesBefore(Date date) {
+        ArrayList<StatementLine> newList = new ArrayList<>();
         for (StatementLine statementLine : statementLinesList){
-            if (statementLine.getDate().before(date))
-                statementLinesList.remove(statementLine);
+            if (statementLine.getDate().after(date) || statementLine.getDate().equals(date))
+                newList.add(statementLine);
         }
+        statementLinesList = newList;
+
     }
     public double totalForMonth(int month, int year) {
         double total = 0;
@@ -224,7 +237,7 @@ public abstract class Account {
         double total = 0.0;
             for (StatementLine statement : statementLinesList) {
                 Category statementCategory = statement.getCategory();
-                if (statementCategory != null && statementCategory.equals(category) && statement.getDate().after(date))
+                if (statementCategory != null && statementCategory.equals(category) && (statement.getDate().after(date) || statement.getDate().equals(date)))
                     total = total + statement.getDraft();
                 }
         return total;
@@ -239,16 +252,5 @@ public abstract class Account {
                 }
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Account{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", interestRate=" + interestRate +
-                '}';
     }
 }

@@ -1,6 +1,7 @@
 package pt.upskill.projeto2.financemanager.gui;
 
 import pt.upskill.projeto2.financemanager.PersonalFinanceManager;
+import pt.upskill.projeto2.utils.Menu;
 
 /**
  * @author upSkill 2020
@@ -32,6 +33,10 @@ public class PersonalFinanceManagerUserInterface {
     private PersonalFinanceManager personalFinanceManager;
 
     public void execute() {
+       String s =  Menu.requestSelection("Nome",OPTIONS_ANALYSIS );
+        System.out.println(s);
+
+
 
     }
 }

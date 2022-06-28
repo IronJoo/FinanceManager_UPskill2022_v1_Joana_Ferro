@@ -4,7 +4,7 @@ import pt.upskill.projeto2.financemanager.categories.Category;
 import pt.upskill.projeto2.financemanager.date.Date;
 
 
-public class StatementLine {
+public class StatementLine implements Comparable<StatementLine>{
 	private Date date;
 	private Date valueDate;
 	private String description;
@@ -64,6 +64,8 @@ public class StatementLine {
 		category = cat;
 	}
 
+
+
 	@Override
 	public String toString() {
 		return "StatementLine{" +
@@ -76,5 +78,10 @@ public class StatementLine {
 				", availableBalance=" + availableBalance +
 				", category=" + category +
 				'}';
+	}
+
+	@Override
+	public int compareTo(StatementLine statementLine) {
+		return date.compareTo(statementLine.getDate());
 	}
 }
