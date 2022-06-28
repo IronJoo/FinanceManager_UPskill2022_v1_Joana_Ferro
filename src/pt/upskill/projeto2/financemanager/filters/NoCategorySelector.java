@@ -2,10 +2,12 @@ package pt.upskill.projeto2.financemanager.filters;
 
 import pt.upskill.projeto2.financemanager.accounts.StatementLine;
 
-public class NoCategorySelector implements Selector{
+public class NoCategorySelector implements Selector<StatementLine>{
 
     @Override
-    public boolean isSelected(Object item) { //Object is StatementLine?
-        return false; //to do
+    public boolean isSelected(StatementLine item) { //Object is StatementLine
+        if (item.getCategory() == null)
+            return true;
+        return false;
     }
 }

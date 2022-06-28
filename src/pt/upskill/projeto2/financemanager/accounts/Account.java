@@ -204,7 +204,10 @@ public abstract class Account {
     }
 
     public void removeStatementLinesBefore(Date date) {
-        //TO DO
+        for (StatementLine statementLine : statementLinesList){
+            if (statementLine.getDate().before(date))
+                statementLinesList.remove(statementLine);
+        }
     }
     public double totalForMonth(int month, int year) {
         double total = 0;

@@ -29,7 +29,5 @@ public class NoCategorySelectorTest {
 		NoCategorySelector selector = new NoCategorySelector();
 		assertFalse(selector.isSelected(stt1));
 		assertTrue(selector.isSelected(stt2));
-		
 	}
-
 }

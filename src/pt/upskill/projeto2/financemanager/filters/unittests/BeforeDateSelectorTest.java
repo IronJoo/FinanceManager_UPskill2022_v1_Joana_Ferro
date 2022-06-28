@@ -29,6 +29,5 @@ public class BeforeDateSelectorTest {
 		BeforeDateSelector selector = new BeforeDateSelector(new Date(15, 1, 2014));
 		assertTrue(selector.isSelected(stt1));
 		assertFalse(selector.isSelected(stt2));
-		
 	}
 }

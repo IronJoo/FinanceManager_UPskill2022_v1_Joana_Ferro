@@ -61,8 +61,6 @@ public class FileAccountFormatTest {
             }
 
         assertEquals(s2, s1);
-
-
     }
 
 }

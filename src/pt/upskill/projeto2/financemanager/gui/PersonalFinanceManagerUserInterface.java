@@ -21,7 +21,7 @@ public class PersonalFinanceManagerUserInterface {
     private static final String OPT_ANALISE = "Análise";
     private static final String OPT_EXIT = "Sair";
 
-    private static final String OPT_MONTHLY_SUMMARY = "Evoluçãoo global por mês";
+    private static final String OPT_MONTHLY_SUMMARY = "Evolução global por mês";
     private static final String OPT_PREDICTION_PER_CATEGORY = "Previsão gastos totais do mês por categoria";
     private static final String OPT_ANUAL_INTEREST = "Previsão juros anuais";
 
@@ -34,6 +34,4 @@ public class PersonalFinanceManagerUserInterface {
     public void execute() {
 
     }
-
-
 }

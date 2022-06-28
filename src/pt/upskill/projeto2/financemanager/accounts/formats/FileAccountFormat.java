@@ -7,10 +7,9 @@ import pt.upskill.projeto2.financemanager.date.Date;
 public class FileAccountFormat implements Format {
     @Override
     public String format(Object objectToFormat) {
-        int i = 0;
         Account account = (Account) objectToFormat;
         String nl = System.getProperty("line.separator");
-        String finalString = "Account Info - " + account.getWeirdDate() + nl
+        String finalString = "Account Info - " + new Date().toString() + nl
                 + "Account  ;" + account.getId() + " ; " + account.getCurrency() + "  ;"
                 + account.getName() + " ;" + account.getType() + " ;" + nl
                 + "Start Date ;" + account.getStartDate() + nl
@@ -19,7 +18,7 @@ public class FileAccountFormat implements Format {
 
                 for (StatementLine statementLine : account.getStatementLinesList()){
                     finalString += statementLine.getDate() + " ;" + statementLine.getValueDate()
-                            + " ;" + statementLine.getDescription() + " ;" + statementLine.getDescription()
+                            + " ;" + statementLine.getDescription() + " ;" + statementLine.getDraft()
                             + " ;" + statementLine.getCredit() + " ;" + statementLine.getAccountingBalance()
                             + " ;" + statementLine.getAvailableBalance() + nl;
                 }

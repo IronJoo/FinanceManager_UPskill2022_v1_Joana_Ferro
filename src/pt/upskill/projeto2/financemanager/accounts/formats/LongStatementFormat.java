@@ -10,6 +10,10 @@ public class LongStatementFormat implements StatementLineFormat {
 
     @Override
     public String format(StatementLine objectToFormat) {
-        return null;
+        String finalString = objectToFormat.getDate() + " \t" + objectToFormat.getValueDate()
+                + " \t" + objectToFormat.getDescription() + " \t" + objectToFormat.getDraft()
+                + " \t" + objectToFormat.getCredit() + " \t" + objectToFormat.getAccountingBalance()
+                + " \t" + objectToFormat.getAvailableBalance();
+        return finalString;
     }
 }
