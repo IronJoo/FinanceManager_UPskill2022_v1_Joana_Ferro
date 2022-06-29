@@ -24,9 +24,4 @@ public class FileAccountFormat implements Format {
                 }
                 return finalString;
     }
-
-//    @Override
-//    public String format(Object objectToFormat) {
-//        return null;
-//    }
 }

@@ -30,21 +30,21 @@ public class SavingsAccount extends Account{
     public double estimatedAverageBalance() {
         int nDays = 0;
         int totalDays = 0;
-        double sum = 0;
+        double sum = 0.0;
         int listSize = super.getStatementLinesList().size();
         if (listSize > 1) { //if list contains entries
             if (super.getStatementLinesList().get(listSize - 1).getDate().getYear() == 2022) {
                 for (int i = 0; i < super.getStatementLinesList().size() - 1; i++) {
                     nDays = super.getStatementLinesList().get(i).getDate().diffInDays(super.getStatementLinesList().get(i + 1).getDate());
-                    sum += super.getStatementLinesList().get(i).getAvailableBalance() * nDays;
+                    sum += super.getStatementLinesList().get(i).getAccountingBalance() * nDays;
                     totalDays += nDays;
                 }
                 return sum / totalDays;
             } else {
-                return super.getStatementLinesList().get(listSize-1).getAvailableBalance();
+                return super.getStatementLinesList().get(listSize-1).getAccountingBalance();
             }
         } else if (listSize == 1)
-            return super.getStatementLinesList().get(listSize-1).getAvailableBalance();
+            return super.getStatementLinesList().get(listSize-1).getAccountingBalance();
         return 0.0;
     }
 }

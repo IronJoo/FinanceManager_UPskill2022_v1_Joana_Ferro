@@ -14,7 +14,6 @@ public abstract class Account {
     private Date startDate;
     private Date endDate;
     private String type;
-    private Date weirdDate;
     private ArrayList<StatementLine> statementLinesList = new ArrayList<>();
     private String additionalInfo = "";
 
@@ -58,14 +57,6 @@ public abstract class Account {
         return type;
     }
 
-    public Date getWeirdDate() {
-        return weirdDate;
-    }
-
-    public void setWeirdDate(Date weirdDate) {
-        this.weirdDate = weirdDate;
-    }
-
     public void setType(String type) {
         this.type = type;
     }
@@ -91,20 +82,21 @@ public abstract class Account {
         this.name = name;
     }
 
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
+    }
+
     public static Account newAccount(File file) {
         try {
             Scanner fileScanner = new Scanner(file);
             Account newAccount = null;
             boolean hasStatementLines = false;
             int count = 0;
-            Date weirdDate = new Date();
             //String dateLastUpdate = tokens[1];
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 switch (count) {
                     case 0:
-                        String[] tokens0 = line.split(" ");
-                        weirdDate = convertToDate(tokens0[3]);
                     case 2:
                     case 3:
                     case 4:
@@ -118,7 +110,6 @@ public abstract class Account {
                         if (line.contains("DraftAccount")) {
                             newAccount = new DraftAccount();
                         }
-                        newAccount.setWeirdDate(weirdDate);
                         newAccount.setId(Long.parseLong(tokens[1]));
                         newAccount.setCurrency(tokens[2]);
                         newAccount.setName(tokens[3]);
@@ -223,14 +214,13 @@ public abstract class Account {
 
     }
     public double totalForMonth(int month, int year) {
-        double total = 0;
+        double total = 0.0;
         if (statementLinesList.size() > 0){ //if statementLinesList has statements
             for (StatementLine statement : statementLinesList){
                 total = total + statement.getDraft();
             }
-            return total;
         }
-        return 0.0;
+        return total;
     }
 
     public double totalDraftsForCategorySince(Category category, Date date) {

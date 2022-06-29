@@ -18,7 +18,7 @@ public class Main {
 
         PersonalFinanceManager personalFinanceManager = new PersonalFinanceManager();
         PersonalFinanceManagerUserInterface gui = new PersonalFinanceManagerUserInterface(personalFinanceManager);
-        gui.execute();
+        //gui.execute();
 
     }
 

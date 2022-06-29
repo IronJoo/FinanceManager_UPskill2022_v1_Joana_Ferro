@@ -41,7 +41,6 @@ public class FileAccountFormatTest {
     public void testFormat() {
         String nl = System.getProperty("line.separator");
         String s1 = f.format(a1);
-        System.out.println(f.format(a1));
         String s2 = "Account Info - " + new Date().toString() + nl
                 + "Account  ;1234567890989 ; EUR  ;POUPANCA ;SavingsAccount ;" + nl
                 + "Start Date ;31-10-2013" + nl
